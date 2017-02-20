@@ -40,14 +40,14 @@ class ImportLeaf(ComparatorMixin):
     def as_string(self):
         string = self.name
         if self.as_name:
-            string += ' as {}'.format(self.as_name)
+            string += ' as {0}'.format(self.as_name)
         return string
 
     def __str__(self):
         return self.as_string()
 
     def __repr__(self):
-        return str('<{}.{} object - "{}">'
+        return str('<{0}.{1} object - "{2}">'
                    ''.format(self.__class__.__module__,
                              self.__class__.__name__,
                              self.as_string()))
@@ -126,10 +126,10 @@ class ImportStatement(ComparatorMixin):
 
     def as_string(self):
         if not self.leafs:
-            return 'import {}'.format(self.stem)
+            return 'import {0}'.format(self.stem)
         else:
             return (
-                'from {} import {}'
+                'from {0} import {1}'
                 ''.format(self.stem,
                           ', '.join(map(operator.methodcaller('as_string'),
                                         self.unique_leafs)))
@@ -145,7 +145,7 @@ class ImportStatement(ComparatorMixin):
         return self.as_string()
 
     def __repr__(self):
-        return str('<{}.{} object - "{}">'
+        return str('<{0}.{1} object - "{2}">'
                    ''.format(self.__class__.__module__,
                              self.__class__.__name__,
                              self.as_string()))

@@ -60,24 +60,24 @@ class GroupedFormatter(Formatter):
                     len(self.all_comments) > 1))
 
     def get_leaf_separator(self, stem=None):
-        return '{}    '.format(self.sep)
+        return '{0}    '.format(self.sep)
 
     def format_as_one_liner(self):
         string = self.string
 
         if len(self.all_comments) == 1:
-            string += '  # {}'.format(
+            string += '  # {0}'.format(
                 ' '.join(get_normalized(self.all_comments))
             )
 
         return string
 
     def format_stem(self):
-        return 'from {} import ('.format(self.stem)
+        return 'from {0} import ('.format(self.stem)
 
     def format_statement_comments(self, sep):
         if self.comments:
-            return '  # {}'.format(' '.join(
+            return '  # {0}'.format(' '.join(
                 get_normalized(self.comments)
             ))
         return ''
@@ -97,14 +97,14 @@ class GroupedFormatter(Formatter):
         ))
         if first_comments:
             string += sep.join(
-                '# {}'.format(i)
+                '# {0}'.format(i)
                 for i in get_normalized(first_comments)
             ) + sep
 
         return string
 
     def format_leaf(self, leaf, sep):
-        return '{},'.format(leaf.as_string())
+        return '{0},'.format(leaf.as_string())
 
     def format_leaf_inline_comments(self, leaf, sep):
         string = ''
@@ -114,14 +114,14 @@ class GroupedFormatter(Formatter):
             leaf.comments
         ))
         if inline_comments:
-            string += '  # {}'.format(
+            string += '  # {0}'.format(
                 ' '.join(get_normalized(inline_comments))
             )
 
         return string
 
     def format_wrap_up(self):
-        return '{})'.format(self.sep)
+        return '{0})'.format(self.sep)
 
     def format_as_grouped(self):
         string = self.format_stem()
@@ -197,13 +197,13 @@ class GroupedInlineAlignedFormatter(GroupedFormatter):
         return ''
 
     def get_leaf_separator(self, stem=None):
-        return '{}{}'.format(self.sep, ' ' * len(stem))
+        return '{0}{1}'.format(self.sep, ' ' * len(stem))
 
     def format_leaf(self, leaf, sep):
         if leaf != self.leafs[-1]:
-            f = '{},'
+            f = '{0},'
         else:
-            f = '{})'
+            f = '{0})'
         return f.format(leaf.as_string())
 
     def format_wrap_up(self):

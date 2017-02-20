@@ -44,13 +44,13 @@ VERBOSITY_MAPPING = {
 }
 
 # initialize FORMATTERS dict
-FORMATTERS = {
-    formatter.name: formatter
+FORMATTERS = dict(
+    (formatter.name, formatter)
     for formatter in vars(formatters).values()
     if (inspect.isclass(formatter) and
         formatter is not formatters.Formatter and
         issubclass(formatter, formatters.Formatter))
-}
+)
 
 # setup logging
 logging.basicConfig(format=LOGGING_FORMAT)
@@ -67,7 +67,7 @@ def find_config():
         config_path = os.path.join(path, IMPORTANIZE_CONFIG)
         if os.path.exists(config_path):
             default_config = config_path
-            found_default = (' Found configuration file at {}'
+            found_default = (' Found configuration file at {0}'
                              ''.format(default_config))
             break
         else:
@@ -94,10 +94,10 @@ parser.add_argument(
     type=six.text_type,
     default=default_config,
     help='Path to importanize config json file. '
-         'If "{}" is present in either current folder '
+         'If "{0}" is present in either current folder '
          'or any parent folder, that config '
          'will be used. Otherwise crude default pep8 '
-         'config will be used.{}'
+         'config will be used.{1}'
          ''.format(IMPORTANIZE_CONFIG,
                    found_default),
 )
@@ -133,7 +133,7 @@ parser.add_argument(
 def run_importanize(path, config, args):
     if config.get('exclude'):
         if any(map(lambda i: fnmatch(path, i), config.get('exclude'))):
-            log.info('Skipping {}'.format(path))
+            log.info('Skipping {0}'.format(path))
             return False
 
     text = read(path)
@@ -142,7 +142,7 @@ def run_importanize(path, config, args):
     # Get formatter from args or config
     formatter = FORMATTERS.get(args.formatter or config.get('formatter'),
                                DEFAULT_FORMATTER)
-    log.debug('Using {} formatter'.format(formatter))
+    log.debug('Using {0} formatter'.format(formatter))
 
     lines_iterator = enumerate(iter(text.splitlines()))
     imports = list(parse_statements(find_imports_from_lines(lines_iterator)))
@@ -189,7 +189,7 @@ def run_importanize(path, config, args):
         with open(path, 'wb') as fid:
             fid.write(lines.encode('utf-8'))
 
-    log.info('Successfully importanized {}'.format(path))
+    log.info('Successfully importanized {0}'.format(path))
     return True
 
 
@@ -198,7 +198,7 @@ def run(path, config, args):
         try:
             run_importanize(path, config, args)
         except Exception as e:
-            log.exception('Error running importanize for {}'
+            log.exception('Error running importanize for {0}'
                           ''.format(path))
             parser.error(six.text_type(e))
 
@@ -217,7 +217,7 @@ def run(path, config, args):
                 try:
                     run_importanize(path, config, args)
                 except Exception as e:
-                    log.exception('Error running importanize for {}'
+                    log.exception('Error running importanize for {0}'
                                   ''.format(path))
                     parser.error(six.text_type(e))
 
@@ -229,15 +229,15 @@ def main():
     (logging.getLogger('')
      .setLevel(VERBOSITY_MAPPING.get(args.verbose, 0)))
 
-    log.debug('Running importanize with {}'.format(args))
+    log.debug('Running importanize with {0}'.format(args))
 
     if args.version:
         msg = (
             'importanize\n'
             '===========\n'
-            '{}\n\n'
-            'version: {}\n'
-            'python: {}\n'
+            '{0}\n\n'
+            'version: {1}\n'
+            'python: {2}\n'
             'source: https://github.com/miki725/importanize'
         )
         print(msg.format(__description__, __version__, sys.executable))
